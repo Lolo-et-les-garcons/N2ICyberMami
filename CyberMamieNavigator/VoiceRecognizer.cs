@@ -19,35 +19,55 @@ namespace CyberMamieNavigator
 
         private void StartEngine()
         {
-            recognitionEngine.SetInputToDefaultAudioDevice();
+            recognitionEngine.SetInputToWaveFile("test.wav");
+            //recognitionEngine.SetInputToDefaultAudioDevice();
+
+            recognitionEngine.MaxAlternates = 4;
+            recognitionEngine.InitialSilenceTimeout = TimeSpan.Zero;
+
+            recognitionEngine.RequestRecognizerUpdate();
 
             recognitionEngine.LoadGrammar(BuildGrammar());
+
+
+            recognitionEngine.SpeechRecognized += Engine_SpeechRecognized;
+            recognitionEngine.SpeechRecognitionRejected += Engine_SpeechRecognitionRejected;
+            recognitionEngine.SpeechHypothesized += Engine_SpeechHypothesized;
         }
 
         private Grammar BuildGrammar()
         {
             GrammarBuilder builder = new GrammarBuilder();
 
-            builder.Append("bourbier");
-            builder.Append("pain");
-            builder.Append("suivant");
-            builder.Append("salade");
+            Choices choices = new Choices();
+            choices.Add("test");
+            choices.Add("salade");
+            choices.Add("bourbier");
+
+            builder.Append(choices);
 
             return new Grammar(builder);
         }
 
-        private static void ASREngine_SpeechHypothesized(object sender, SpeechHypothesizedEventArgs e)
+
+        public void Recognize()
+        {
+            recognitionEngine.Recognize();
+        }
+
+
+        private void Engine_SpeechHypothesized(object sender, SpeechHypothesizedEventArgs e)
         {
             Console.Write("? ");
             UseResult(e.Result);
         }
 
-        private static void ASREngine_SpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs e)
+        private void Engine_SpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs e)
         {
             Console.WriteLine("Erreur !");
         }
 
-        private static void UseResult(RecognitionResult rr)
+        private void UseResult(RecognitionResult rr)
         {
             string text = ">";
 
@@ -61,7 +81,7 @@ namespace CyberMamieNavigator
             Console.WriteLine(text);
         }
 
-        private static void ASREngine_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        private void Engine_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             UseResult(e.Result);
         }
