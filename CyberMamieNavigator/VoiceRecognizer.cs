@@ -43,6 +43,7 @@ namespace CyberMamieNavigator
             choices.Add("test");
             choices.Add("salade");
             choices.Add("bourbier");
+            choices.Add("bouton");
 
             builder.Append(choices);
 

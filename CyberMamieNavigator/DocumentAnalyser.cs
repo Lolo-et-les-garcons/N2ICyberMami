@@ -15,7 +15,7 @@ namespace CyberMamieNavigator
 
         public List<string> Analyse(GeckoDocument document)
         {
-            List<string> testVocal = new List<string>;
+            List<string> testVocal = new List<string>();
 
             foreach(GeckoNode node in document.Body.ChildNodes)
             {
