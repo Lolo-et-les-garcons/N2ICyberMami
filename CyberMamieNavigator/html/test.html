@@ -3,7 +3,7 @@
 
 
 <body>
-<button> Mamie Test </button>
+<button id="test1"> Mamie Test </button>
 <br>
 
 
@@ -15,10 +15,20 @@
        minlength="4" maxlength="8" size="10">
  
 <br>
-<button> CyberMamie Test </button>
+<button id="test2"> CyberMamie Test </button>
 
+<script type="text/javascript">
+    var test1 = document.getElementById('test1');
+    var test2 = document.getElementById('test2');
 
+    test1.addEventListener("click", () => {
+        alert('test1');
+    });
 
+    test2.addEventListener("click", () => {
+        alert('test2');
+    });
+</script>
 
 </body>
 </html>

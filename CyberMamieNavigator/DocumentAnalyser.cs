@@ -6,83 +6,55 @@ using Gecko.DOM;
 
 namespace CyberMamieNavigator
 {
-
-    public class VoiceAction
-    {
-        public string type;
-        public event Action action;
-
-        public void Fire()
-        {
-            action?.Invoke();
-        }
-    }
-
     public class DocumentAnalyser
     {
+        private List<VoiceAction> actions;
+
         public DocumentAnalyser()
         {
-
+            actions = new List<VoiceAction>();
         }
 
-
-        public List<VoiceAction> Analyse(GeckoDocument document)
+        public void Analyse(GeckoDocument document)
         {
-            List<VoiceAction> testVocal = new List<VoiceAction>();
+            actions.Clear();
 
-            foreach(GeckoNode node in document.Body.ChildNodes)
+            AddVoiceActions(document, "button");
+            AddVoiceActions(document, "a");
+        }
+
+        public List<VoiceAction> GetVoiceActions()
+        {
+            return actions;
+        }
+
+        public void AddVoiceActions(GeckoDocument document, string tagName)
+        {
+            foreach (GeckoElement element in document.GetElementsByTagName(tagName))
             {
-                if (BaliseValable(node))
+                VoiceAction action = new VoiceAction();
+                action.label = element.TextContent.Trim();
+
+                if(tagName == "button")
                 {
-                    /*Console.WriteLine(node.NodeName + " " + node.TextContent);
-                    testVocal.Add(node.TextContent);*/
-
-                    VoiceAction action = new VoiceAction();
-                    action.type = node.TextContent;
-
-                    if (node.NodeName == "BUTTON")
+                    action.task += () =>
                     {
-                        action.action += () =>
-                        {
-                            /*GeckoButtonElement button = new GeckoButtonElement(node.GetEventTarget().CastToGeckoElement());
-
-                            Console.WriteLine("event : " + button.TextContent);
-                            button.Click();*/
-
-
-                        };
-                    }
-
-                    testVocal.Add(action);
+                        GeckoButtonElement button = new GeckoButtonElement(element.DomObject);
+                        button.Click();
+                    };
                 }
-                
-            }
 
-            foreach(VoiceAction s in testVocal)
-            {;
-                Console.WriteLine(s.type);
-
-                s.Fire();
-            }
-
-            return testVocal;
-        }
-
-        public bool BaliseValable(GeckoNode node)
-        {
-
-            if (NodeType.Element == node.NodeType)
-            {
-                switch (node.NodeName)
+                if(tagName == "a")
                 {
-                    case "BUTTON":
-                    case "A":
-                    case "LABEL":
-                        return true;
-                    default: return false;
+                    action.task += () =>
+                    {
+                        GeckoAnchorElement anchor = new GeckoAnchorElement(element.DomObject);
+                        anchor.Click();
+                    };
                 }
+
+                actions.Add(action);
             }
-            return false;
         }
     }
 }

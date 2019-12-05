@@ -53,7 +53,7 @@ namespace CyberMamieNavigator
 
         public void Recognize()
         {
-            recognitionEngine.Recognize();
+            recognitionEngine.RecognizeAsync();
         }
 
 
