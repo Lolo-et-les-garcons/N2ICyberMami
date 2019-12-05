@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DocumentAnalyser.cs" />
     <Compile Include="FormNavigator.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -62,6 +63,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VoiceRecognizer.cs" />
     <EmbeddedResource Include="FormNavigator.resx">
       <DependentUpon>FormNavigator.cs</DependentUpon>
     </EmbeddedResource>
