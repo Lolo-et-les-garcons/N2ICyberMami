@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
+
+using System.Speech.Recognition.SrgsGrammar;
+using System.Speech.Recognition;
 
 namespace CyberMamieNavigator
 {
@@ -10,7 +12,7 @@ namespace CyberMamieNavigator
         {
             InitializeComponent();
 
-            this.geckoWebBrowser1.Navigate("http://www.google.fr");
+            browser.Navigate("http://www.google.fr");
         }
     }
 }
