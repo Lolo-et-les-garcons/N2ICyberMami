@@ -56,5 +56,26 @@ namespace CyberMamieNavigator
                 actions.Add(action);
             }
         }
+
+        public string[] GetLabels()
+        {
+            List<string> labels = new List<string>();
+            foreach(VoiceAction va in actions)
+            {
+                labels.Add(va.label);
+            }
+            return labels.ToArray();
+        }
+
+        public VoiceAction FindByName(string s)
+        {
+            foreach(VoiceAction va in actions)
+            {
+                if (s == va.label) return va;
+            }
+            return null;
+        }
+
+
     }
 }
