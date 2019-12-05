@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 
 using System.Speech.Recognition;
@@ -9,9 +8,11 @@ namespace CyberMamieNavigator
     public class VoiceRecognizer
     {
         private SpeechRecognitionEngine recognitionEngine;
+        private DocumentAnalyser analyser;
 
-        public VoiceRecognizer()
+        public VoiceRecognizer(DocumentAnalyser analyser)
         {
+            this.analyser = analyser;
             recognitionEngine = new SpeechRecognitionEngine(CultureInfo.CurrentCulture);
 
             StartEngine();
@@ -22,21 +23,19 @@ namespace CyberMamieNavigator
             recognitionEngine.SetInputToWaveFile("test.wav");
             //recognitionEngine.SetInputToDefaultAudioDevice();
 
-            recognitionEngine.MaxAlternates = 4;
+            //recognitionEngine.MaxAlternates = 4;
             recognitionEngine.InitialSilenceTimeout = TimeSpan.Zero;
-
-            recognitionEngine.RequestRecognizerUpdate();
-
-            recognitionEngine.LoadGrammar(BuildGrammar());
-
 
             recognitionEngine.SpeechRecognized += Engine_SpeechRecognized;
             recognitionEngine.SpeechRecognitionRejected += Engine_SpeechRecognitionRejected;
             recognitionEngine.SpeechHypothesized += Engine_SpeechHypothesized;
         }
 
-        private Grammar BuildGrammar()
+
+        public void Recognize()
         {
+            Stop();
+
             GrammarBuilder builder = new GrammarBuilder();
 
             Choices choices = new Choices();
@@ -47,13 +46,16 @@ namespace CyberMamieNavigator
 
             builder.Append(choices);
 
-            return new Grammar(builder);
+            recognitionEngine.LoadGrammar(new Grammar(builder));
+
+            recognitionEngine.RequestRecognizerUpdate();
+
+            recognitionEngine.RecognizeAsync(RecognizeMode.Multiple);
         }
 
-
-        public void Recognize()
+        public void Stop()
         {
-            recognitionEngine.RecognizeAsync();
+            recognitionEngine.RecognizeAsyncStop();
         }
 
 
@@ -68,9 +70,14 @@ namespace CyberMamieNavigator
             Console.WriteLine("Erreur !");
         }
 
+        private void Engine_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        {
+            UseResult(e.Result);
+        }
+
         private void UseResult(RecognitionResult rr)
         {
-            string text = ">";
+            string text = "";
 
             foreach (RecognizedWordUnit rwu in rr.Words)
             {
@@ -80,11 +87,6 @@ namespace CyberMamieNavigator
             text = text.Replace('.', ' ').Trim();
 
             Console.WriteLine(text);
-        }
-
-        private void Engine_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
-        {
-            UseResult(e.Result);
         }
     }
 }

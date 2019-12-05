@@ -15,7 +15,7 @@ namespace CyberMamieNavigator
             browser.LoadHtml(File.ReadAllText("html/test.html"));
 
             DocumentAnalyser analyser = new DocumentAnalyser();
-            VoiceRecognizer recognizer = new VoiceRecognizer();
+            VoiceRecognizer recognizer = new VoiceRecognizer(analyser);
 
             browser.DocumentCompleted += ((sender, _) =>
             {
