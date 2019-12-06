@@ -1,11 +1,7 @@
 ﻿using System;
-using System.IO;
 using System.Globalization;
 
 using System.Speech.Recognition;
-
-using NAudio;
-using NAudio.Wave;
 
 namespace CyberMamieNavigator
 {
@@ -24,8 +20,6 @@ namespace CyberMamieNavigator
 
         private void StartEngine()
         {
-            //InitalizeMicrophone();
-
             //recognitionEngine.SetInputToWaveFile("test2.wav");
             recognitionEngine.SetInputToDefaultAudioDevice();
 
@@ -37,23 +31,6 @@ namespace CyberMamieNavigator
             recognitionEngine.SpeechHypothesized += Engine_SpeechHypothesized;
         }
 
-        /*private void InitalizeMicrophone()
-        {
-            WaveIn waveIn = new WaveIn();
-            waveIn.WaveFormat = new WaveFormat();
-
-            waveIn.StartRecording();
-
-            MemoryStream ms = new MemoryStream();
-
-            waveIn.DataAvailable += (sender, e) =>
-            {
-                ms.Write(e.Buffer, 0, e.BytesRecorded);
-            };
-
-            recognitionEngine.SetInputToWaveStream(ms);
-        }*/
-
 
         public void Recognize()
         {
@@ -62,9 +39,6 @@ namespace CyberMamieNavigator
             GrammarBuilder builder = new GrammarBuilder();
 
             Choices choices = new Choices(analyser.GetLabels());
-            /*Choices choices = new Choices();
-            choices.Add("test");
-            choices.Add("bourbe");*/
 
             builder.Append(choices);
 
