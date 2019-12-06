@@ -21,6 +21,7 @@ namespace CyberMamieNavigator
 
             AddVoiceActions(document, "button");
             AddVoiceActions(document, "a");
+            AddVoiceActions(document, "iframe");
         }
 
         public List<VoiceAction> GetVoiceActions()
@@ -53,6 +54,14 @@ namespace CyberMamieNavigator
                     };
                 }
 
+                if (tagName == "iframe")
+                {
+                    action.task += () =>
+                    {
+                        GeckoButtonElement iframe = new GeckoButtonElement(element.DomObject);
+                        iframe.Click();
+                    };
+                }
                 actions.Add(action);
             }
         }
