@@ -17,12 +17,12 @@ namespace CyberMamieNavigator
             DocumentAnalyser analyser = new DocumentAnalyser();
             VoiceRecognizer recognizer = new VoiceRecognizer(analyser);
 
-            browser.DocumentCompleted += ((sender, _) =>
+            browser.DocumentCompleted += (sender, _) =>
             {
                 analyser.Analyse(browser.Document);
 
                 recognizer.Recognize();
-            });
+            };
         }
     }
 }
