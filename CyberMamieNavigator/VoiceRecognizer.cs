@@ -1,7 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Globalization;
 
 using System.Speech.Recognition;
+
+using NAudio;
+using NAudio.Wave;
 
 namespace CyberMamieNavigator
 {
@@ -20,8 +24,10 @@ namespace CyberMamieNavigator
 
         private void StartEngine()
         {
-            recognitionEngine.SetInputToWaveFile("test.wav");
-            //recognitionEngine.SetInputToDefaultAudioDevice();
+            //InitalizeMicrophone();
+
+            //recognitionEngine.SetInputToWaveFile("test2.wav");
+            recognitionEngine.SetInputToDefaultAudioDevice();
 
             //recognitionEngine.MaxAlternates = 4;
             recognitionEngine.InitialSilenceTimeout = TimeSpan.Zero;
@@ -31,6 +37,23 @@ namespace CyberMamieNavigator
             recognitionEngine.SpeechHypothesized += Engine_SpeechHypothesized;
         }
 
+        /*private void InitalizeMicrophone()
+        {
+            WaveIn waveIn = new WaveIn();
+            waveIn.WaveFormat = new WaveFormat();
+
+            waveIn.StartRecording();
+
+            MemoryStream ms = new MemoryStream();
+
+            waveIn.DataAvailable += (sender, e) =>
+            {
+                ms.Write(e.Buffer, 0, e.BytesRecorded);
+            };
+
+            recognitionEngine.SetInputToWaveStream(ms);
+        }*/
+
 
         public void Recognize()
         {
@@ -38,11 +61,10 @@ namespace CyberMamieNavigator
 
             GrammarBuilder builder = new GrammarBuilder();
 
-            Choices choices = new Choices();
+            Choices choices = new Choices(analyser.GetLabels());
+            /*Choices choices = new Choices();
             choices.Add("test");
-            choices.Add("salade");
-            choices.Add("bourbier");
-            choices.Add("bouton");
+            choices.Add("bourbe");*/
 
             builder.Append(choices);
 
@@ -87,6 +109,18 @@ namespace CyberMamieNavigator
             text = text.Replace('.', ' ').Trim();
 
             Console.WriteLine(text);
+
+            VoiceAction action = analyser.FindByName(text);
+
+            if (action != null)
+            {
+                Console.WriteLine("Firing " + action.label);
+                action.Fire();
+            }
+            else
+            {
+                Console.WriteLine("Not found");
+            }
         }
     }
 }
